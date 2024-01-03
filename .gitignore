@@ -174,5 +174,12 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
-
+DC_a01.wav
 test.py
+main.py
+DC_a02.wav
+DC_a03.wav
+DC_a04.wav
+DC_a06.wav
+recorded_audio.wav
+
