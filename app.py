@@ -2,7 +2,6 @@ import streamlit as st
 import time
 import pickle
 from pathlib import Path
-from dotenv import load_dotenv
 import requests
 import time as t 
 API_URL = ["https://api-inference.huggingface.co/models/shivanshu292001/Emotions","https://api-inference.huggingface.co/models/harshit345/xlsr-wav2vec-speech-emotion-recognition","https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"] # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
