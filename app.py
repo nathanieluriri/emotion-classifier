@@ -1,6 +1,9 @@
 import streamlit as st
 import time
 import pickle
+import librosa
+import soundfile as sf 
+import io
 from pathlib import Path
 import requests
 import time as t 
@@ -23,7 +26,10 @@ if "prediction_option" not in st.session_state:
     st.session_state.prediction_option = False
 
 
-# write a function to handle files if user wants to select multiple files 
+
+
+
+
 
 
 
@@ -112,6 +118,7 @@ def reverse_dict(input_dict):
 
 def refined_output(output):
     if type(output) == str:
+        st.warning("Response <400>")
         return False
     
     st.write(f"## :orange[For File ] : {st.session_state.uploaded_file.name}")
@@ -145,7 +152,7 @@ def Multiq_refined_output(output):# function is supposed to be able to handle un
 
 
 with st.sidebar:
-    st.session_state.uploaded_file =st.file_uploader("Upload only one audio file to be analyzed",type=["wav","mp3","AAC","flaac"])
+    st.session_state.uploaded_file =st.file_uploader("Upload only one audio file to be analyzed",type=["wav"])
     # st.session_state.multiple_uploaded_files = st.file_uploader("Upload multiple audio files for analysis ",type=["wav","mp3","AAC","flaac"],accept_multiple_files=True)
    
 
@@ -159,10 +166,10 @@ with main_container:
        with analysis: # Add option to visualize the data 
            st.header("Analysis")
            if st.session_state.uploaded_file != None:
-               output = query(st.session_state.uploaded_file)
+            output = query(st.session_state.uploaded_file)
                
                
-               refined_output(output) # create logic to handle which function should be called depending on how many files were entered into the web application
+            refined_output(output) # create logic to handle which function should be called depending on how many files were entered into the web application
            analysis = st.empty()
            analysis.write("based on the audio file provided and the prediction settings the results of the analysis say there is 20% ")
             # An option to just visualize the data
@@ -179,7 +186,7 @@ with main_container:
             with col2:
                 st.session_state.prediction_option = st.selectbox("How accurate would you rate the model",(1, 2, 3,4,5),disabled=st.session_state.disabled)
            st.write("### There are three different models which one would you like to use")
-           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled )
+           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled)
        
             
           
