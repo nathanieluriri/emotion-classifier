@@ -112,16 +112,27 @@ def reverse_dict(input_dict):
 
 
 def refined_output(output):
+    if type(output) == str:
+        return False
+    
     st.write(f"## :orange[For File ] : {st.session_state.uploaded_file.name}")
     for output_dictionary in output:
        print(output_dictionary)
        st.code(f"{output_dictionary['label']} : {output_dictionary['score'] * 100} %")
+
+
+
+
+def Multiq_refined_output(output):# function is supposed to be able to handle unpacking so many dictionaries and lists
+    for Output in output:
+        st.write(Output)
+        print(Output)
     
     
     
 
 
-
+# function is supposed to check if the positive and negative box is ticked to just label it in positive and negative instead of naming the emotions
 
 
 
@@ -136,7 +147,7 @@ def refined_output(output):
 
 with st.sidebar:
     st.session_state.uploaded_file =st.file_uploader("Upload only one audio file to be analyzed",type=["wav","mp3","AAC","flaac"])
-    st.session_state.multiple_uploaded_files = st.file_uploader("Upload multiple audio files for analysis ",type=["wav","mp3","AAC","flaac"],accept_multiple_files=True)
+    # st.session_state.multiple_uploaded_files = st.file_uploader("Upload multiple audio files for analysis ",type=["wav","mp3","AAC","flaac"],accept_multiple_files=True)
    
 
 
@@ -151,7 +162,8 @@ with main_container:
            if st.session_state.uploaded_file != None:
                output = query(st.session_state.uploaded_file)
                
-               refined_output(output) # replace with a function to display a refined output using the prediction rules 
+               
+               refined_output(output) # create logic to handle which function should be called depending on how many files were entered into the web application
            analysis = st.empty()
            analysis.write("based on the audio file provided and the prediction settings the results of the analysis say there is 20% ")
             # An option to just visualize the data
@@ -166,9 +178,9 @@ with main_container:
             with col1:
                 st.checkbox(" Select me if you just want to see Positive and Negative emotions only", key="disabled")
             with col2:
-                st.session_state.prediction_option = st.selectbox(        "How Many emotions would you like to see",        (1, 2, 3,4,5),        disabled=st.session_state.disabled )
+                st.session_state.prediction_option = st.selectbox("How accurate would you rate the model",(1, 2, 3,4,5),disabled=st.session_state.disabled)
            st.write("### There are three different models which one would you like to use")
-           st.session_state.model_option = st.selectbox(        "Select between 1-3",        (1, 2, 3) ,key="model_selection",        disabled=st.session_state.disabled )
+           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled )
        
             
           
