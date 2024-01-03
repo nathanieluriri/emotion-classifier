@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import requests
 import time as t 
-API_URL = "https://api-inference.huggingface.co/models/shivanshu292001/Emotions" # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
+API_URL = ["https://api-inference.huggingface.co/models/shivanshu292001/Emotions","https://api-inference.huggingface.co/models/harshit345/xlsr-wav2vec-speech-emotion-recognition","https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"] # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
 headers = {"Authorization": "Bearer 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"}
 
 st.set_page_config("emotion sound Project",page_icon=":sound:")
@@ -18,7 +18,10 @@ if "multiple_uploaded_files" not in st.session_state:
 
 if "prediction_option" not in st.session_state:
     st.session_state.prediction_option = False
-
+if "model_option" not in st.session_state:
+    st.session_state.model_option = 0
+if "prediction_option" not in st.session_state:
+    st.session_state.prediction_option = False
 
 
 # write a function to handle files if user wants to select multiple files 
@@ -28,7 +31,8 @@ if "prediction_option" not in st.session_state:
 def query(file, counter=0):
    
     data = file
-    response = requests.post(API_URL, headers=headers, data=data)
+    response = requests.post(API_URL[st.session_state.model_option-1], headers=headers, data=data)
+    print("using :",API_URL[st.session_state.model_option-1])
     print(response)
     if response.status_code == 503:
         t.sleep(5)
@@ -164,7 +168,7 @@ with main_container:
             with col2:
                 st.session_state.prediction_option = st.selectbox(        "How Many emotions would you like to see",        (1, 2, 3,4,5),        disabled=st.session_state.disabled )
            st.write("### There are three different models which one would you like to use")
-           st.session_state.model_option = st.selectbox(        "Select between 1-3",        (1, 2, 3),key="model_selection",        disabled=st.session_state.disabled )
+           st.session_state.model_option = st.selectbox(        "Select between 1-3",        (1, 2, 3) ,key="model_selection",        disabled=st.session_state.disabled )
        
             
           
