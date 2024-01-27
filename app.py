@@ -9,6 +9,8 @@ st.set_page_config("emotion sound Project",page_icon=":sound:")
 
 if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
+if 'output' not in st.session_state:
+    st.session_state.output= None
 
 if "multiple_uploaded_files" not in st.session_state:
     st.session_state.multiple_uploaded_files = None
@@ -37,6 +39,8 @@ def query(file, counter=0):
     if response.status_code == 503:
         t.sleep(5)
         print("trying again...") 
+        st.write('Trying again...')
+        st.button('Click me if its response 400')
         counter += 1        
         if counter == 5:
             st.write("Server to busy try again in 20 mins")
@@ -151,7 +155,10 @@ with st.sidebar:
     # st.session_state.multiple_uploaded_files = st.file_uploader("Upload multiple audio files for analysis ",type=["wav","mp3","AAC","flaac"],accept_multiple_files=True)
    
 
-
+def re_run():
+    print("hereeeeeeeeee")
+    st.session_state.output=query(st.session_state.uploaded_file)
+    refined_output(st.session_state.output)
 
     
 main_container = st.empty()
@@ -161,10 +168,10 @@ with main_container:
        with analysis: # Add option to visualize the data 
            st.header("Analysis")
            if st.session_state.uploaded_file != None:
-            output = query(st.session_state.uploaded_file)
+            st.session_state.output = query(st.session_state.uploaded_file)
                
                
-            refined_output(output) # create logic to handle which function should be called depending on how many files were entered into the web application
+            refined_output(st.session_state.output) # create logic to handle which function should be called depending on how many files were entered into the web application
            analysis = st.empty()
            analysis.write("based on the audio file provided and the prediction settings the results of the analysis say there is 20% ")
             # An option to just visualize the data
@@ -181,7 +188,7 @@ with main_container:
             with col2:
                 st.session_state.prediction_option = st.selectbox("How accurate would you rate the model",(1, 2, 3,4,5),disabled=st.session_state.disabled)
            st.write("### There are three different models which one would you like to use")
-           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled)
+           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled,on_change=re_run)
        
             
           
