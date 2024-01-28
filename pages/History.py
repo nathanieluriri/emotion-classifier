@@ -1,10 +1,11 @@
 import streamlit as st
 from pages import *
 from datetime import datetime
-
+import os
 from pymodm import MongoModel,connect,fields
-
-
+from dotenv import load_dotenv
+MONGO_URI = os.getenv('MONGO_URI')
+load_dotenv()
 if "user_history" not in st.session_state:
     st.session_state.user_history= []
 
@@ -16,7 +17,7 @@ class User(MongoModel):
     password = fields.CharField(mongo_name="Password")
 
 class History(MongoModel):
-    connect('mongodb://localhost:27017/auth_tutorial')
+    connect(mongodb_uri=MONGO_URI)
     from datetime import datetime
     UserDetails = fields.ReferenceField(User,mongo_name="User Details")
     History_Title = fields.CharField(mongo_name="History Name")
@@ -27,7 +28,7 @@ def query_history():
     from pymodm import connect, MongoModel, fields
     from bson import ObjectId
     from pymongo import MongoClient
-    client = MongoClient("mongodb://localhost:27017")
+    client = MongoClient(MONGO_URI)
     filter = {"User Details":ObjectId(st.session_state.UID)}
     db = client.auth_tutorial
     collection = db.history
@@ -35,19 +36,14 @@ def query_history():
     query_output_ls=[]
     print(query_output)
     for query in query_output:
-        st.write(f"{query['History Name']}")
+        
         query_output_ls.append(query)
 
 
     return query_output_ls
 
-@st.cache_data(show_spinner="Loading user history...")
-def get_users_history(history_results):
-    for history in st.session_state.history_results:        
-        timestamp_seconds = history['Date'].time
-        date_and_time= datetime.utcfromtimestamp(timestamp_seconds)
-        print(date_and_time)
-        st.session_state.user_history.append(history)
+
+
 
 
 
@@ -71,8 +67,6 @@ except AttributeError:
 
 
 if st.session_state.Login:
-    st.write("# Users history",st.session_state.user_history)
     print(st.session_state.UID)
-    history_results = query_history()
-    if history_results:
-        get_users_history(str(history_results))
+    st.session_state.user_history = query_history()
+    st.write("# Users history",st.session_state.user_history)

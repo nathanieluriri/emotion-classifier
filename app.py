@@ -164,9 +164,10 @@ def re_run():
     refined_output(st.session_state.output)
 
 @st.cache_data(show_spinner="Saving to database...")
-def update(file_name,user_id):
+def update(file_name,user_id,_process):
      new_history = History(History_Title =st.session_state.uploaded_file.name, UserDetails=st.session_state.UID,Description = st.session_state.output)
-     new_history.save()
+     if type(_process) != type("string"):
+        new_history.save()
      
 
 main_container = st.empty()
@@ -182,7 +183,7 @@ with main_container:
             try:
                 if st.session_state.Login:
                     st.info("history is being saved")
-                    update(str(st.session_state.uploaded_file),str(st.session_state.UID))
+                    update(str(st.session_state.uploaded_file),str(st.session_state.UID),_process = st.session_state.output)
             except AttributeError:
                 st.switch_page("pages/login_page.py")
                 

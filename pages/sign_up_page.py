@@ -1,6 +1,7 @@
 import streamlit as st
 from pages import *
 from dbfunctions import  query_userName_from_UID
+import os
 
 if 'UID' not in st.session_state:
     st.session_state.UID = "Nothing has happened yet"
@@ -10,8 +11,11 @@ def db_login_signup(proceed,user_name,password):
     from pymongo import MongoClient
     from pymodm import connect, MongoModel, fields
     from bson import ObjectId
+    from dotenv import load_dotenv
+    load_dotenv()
+    MONGO_URI = os.getenv('MONGO_URI')
 
-    connect("mongodb://localhost:27017/auth_tutorial")
+    connect(MONGO_URI)
 
     class User(MongoModel):
         user_name = fields.CharField(mongo_name="User Name")

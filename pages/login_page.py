@@ -1,13 +1,15 @@
 import streamlit as st
 from dbfunctions import  query_userName_from_UID
-
+import os
 def db_login_signup(proceed,user_name,password):
     import bcrypt
     from pymongo import MongoClient
     from pymodm import connect, MongoModel, fields
     from bson import ObjectId
-
-    connect("mongodb://localhost:27017/auth_tutorial")
+    from dotenv import load_dotenv
+    load_dotenv()
+    MONGO_URI = os.getenv('MONGO_URI')
+    connect(MONGO_URI)
 
     class User(MongoModel):
         user_name = fields.CharField(mongo_name="User Name")
