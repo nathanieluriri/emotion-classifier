@@ -33,10 +33,11 @@ pip install -r requirements.txt
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies.
-3. Run the Streamlit app using the following command:
+3. Set up a MongoDB database and create .env file and put your connection string in an environment variable called `MONGO_URI`
+4. Run the Streamlit app using the following command:
 
 ```
-streamlit run your_app_name.py
+streamlit run app.py
 ```
 
 4. The application will open in your default web browser.
