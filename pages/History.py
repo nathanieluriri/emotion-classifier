@@ -12,6 +12,33 @@ if "user_history" not in st.session_state:
 if "history_results" not in st.session_state:
     st.session_state.history_results= []
 
+if "selected_analysis" not in st.session_state:
+    st.session_state.selected_analysis ="Nothing selected yet"
+if "radio_options" not in st.session_state:
+    st.session_state.radio_options =[]
+
+if "radio_option" not in st.session_state:
+    st.session_state.radio_option=[]
+
+if "return_point" not in st.session_state:
+    st.session_state.return_point = 0
+
+if "disabled" not in st.session_state:
+    st.session_state.disabled = True
+
+
+def refined_output(output,stuff):
+    if type(output) == str:
+        st.warning(output)
+        st.write("Something failed")
+    
+    st.write(f"## :orange[For File ] : {stuff}")
+    for output_dictionary in output:
+    #    print(output_dictionary)
+       st.code(f"{output_dictionary['label']} : {output_dictionary['score'] * 100} %")
+    # return output
+
+
 class User(MongoModel):
     user_name = fields.CharField(mongo_name="User Name")
     password = fields.CharField(mongo_name="Password")
@@ -34,7 +61,7 @@ def query_history():
     collection = db.history
     query_output = collection.find(filter)
     query_output_ls=[]
-    print(query_output)
+    # print(query_output)
     for query in query_output:
         
         query_output_ls.append(query)
@@ -43,7 +70,19 @@ def query_history():
     return query_output_ls
 
 
+def convert_to_date(Timestamp_in_seconds):
+    Timestamp_in_seconds = Timestamp_in_seconds.time
+    date_and_time = datetime.utcfromtimestamp(Timestamp_in_seconds)
+    return date_and_time
 
+def readeable_history(User_history_list):
+    radio_options = list()
+    selected_analysis = list()
+    for n in range(len(User_history_list)):
+        radio_options.append(f":orange[{  User_history_list[n]['History Name']  }] `{convert_to_date(User_history_list[n]['Date'])}` ")
+        selected_analysis.append(((User_history_list[n],radio_options[n],)))
+    return radio_options,selected_analysis
+        
 
 
 
@@ -65,8 +104,44 @@ except AttributeError:
 
 
 
-
 if st.session_state.Login:
-    print(st.session_state.UID)
+    # print(st.session_state.UID)
     st.session_state.user_history = query_history()
-    st.write("# Users history",st.session_state.user_history)
+    
+    analysis,previous_history = st.tabs(["Analysis","Load Previous History"])
+
+    with  analysis:
+        try:
+            st.button("Return to point you set", on_click=refined_output(st.session_state.selected_analysis[st.session_state.return_point][0]['Description'],st.session_state.selected_analysis[st.session_state.return_point][0]['History Name']) )
+        except IndexError:
+            st.write("# No History Yet!")
+            st.button("Check Again")
+            
+
+        
+
+
+    with previous_history:
+        st.session_state.radio_options,st.session_state.selected_analysis = readeable_history(st.session_state.user_history)
+        st.session_state.radio_option =st.radio("SELECT A POINT To Return to",st.session_state.radio_options)
+        if st.session_state.radio_option ==None:
+            st.session_state.disabled= True
+        else:
+            st.session_state.disabled = False
+        if st.button("Set return point",disabled=st.session_state.disabled):
+            for i in range(len(st.session_state.selected_analysis)):
+                if st.session_state.radio_option==st.session_state.selected_analysis[i][1]:
+                    st.session_state.return_point = i
+                    st.success("Return Point successfully set")
+        
+        # st.write(checktupleinlist(st.session_state.radio_option,st.session_state.selected_analysis))
+        
+         # create a dictionary of string that takes timestamp and converts it to human redeable time and takes file name it should be mapped to the st.session_state.user_history 
+
+
+
+
+
+
+
+

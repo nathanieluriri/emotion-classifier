@@ -52,7 +52,7 @@ def db_login_signup(proceed,user_name,password):
             return uID
             
         else:
-            print(logged_in_Successful,uID)
+            # print(logged_in_Successful,uID)
             return" Wrong password or username"
             # print(logged_in)
 
@@ -76,7 +76,7 @@ def db_login_signup(proceed,user_name,password):
                     return logged_in, user_id
                     
                 elif user_name != u.user_name:
-                    print(user_name,"user name not found",u.user_name)
+                    # print(user_name,"user name not found",u.user_name)
 
                     logged_in,user_id= False,False
 
@@ -150,7 +150,7 @@ if st.session_state.submitted == False:
             
             st.session_state.submitted = st.form_submit_button("Submit")
             if st.session_state.submitted:
-                print(st.session_state.name,st.session_state.password)
+                # print(st.session_state.name,st.session_state.password)
 
 
                 st.session_state.UID=db_login_signup(2,st.session_state.name,st.session_state.password)
@@ -171,9 +171,9 @@ if st.session_state.submitted == False:
                     st.toast(f"Welcome back user '{st.session_state.UID}'  ",icon="✅")
 
 else:
-    print("Hiiiiiiiiiiiiiiiiiiiiiiii",st.session_state.UID,st.session_state.name)
+    # print("Hiiiiiiiiiiiiiiiiiiiiiiii",st.session_state.UID,st.session_state.name)
     st.session_state.UID=db_login_signup(2,st.session_state.name,st.session_state.password)
-    print("Hiiiiiiiiiiiiiiiiiiiiiiii",st.session_state.UID,st.session_state.name)
+    # print("Hiiiiiiiiiiiiiiiiiiiiiiii",st.session_state.UID,st.session_state.name)
     st.session_state.Login = True
     st.session_state.UserName = query_userName_from_UID(st.session_state.UID)['User Name']
     st.toast(f" Welcome backk  {st.session_state.UserName}", icon='🔑')

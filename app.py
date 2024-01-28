@@ -124,7 +124,7 @@ def refined_output(output):
     
     st.write(f"## :orange[For File ] : {st.session_state.uploaded_file.name}")
     for output_dictionary in output:
-       print(output_dictionary)
+    #    print(output_dictionary)
        st.code(f"{output_dictionary['label']} : {output_dictionary['score'] * 100} %")
     return output
 
@@ -163,7 +163,7 @@ def re_run():
     st.session_state.output=query(st.session_state.uploaded_file)
     refined_output(st.session_state.output)
 
-@st.cache_data(show_spinner="Saving to database...")
+
 def update(file_name,user_id,_process):
      new_history = History(History_Title =st.session_state.uploaded_file.name, UserDetails=st.session_state.UID,Description = st.session_state.output)
      if type(_process) != type("string"):
@@ -201,10 +201,11 @@ with main_container:
 
             with col1:
                 st.checkbox(" Select me if you just want to see Positive and Negative emotions only", key="disabled")
+
             with col2:
-                st.session_state.prediction_option = st.selectbox("How accurate would you rate the model",(1, 2, 3,4,5),disabled=st.session_state.disabled)
-           st.write("### There are three different models which one would you like to use")
-           st.session_state.model_option = st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled,on_change=re_run)
+                st.selectbox("Select between 1-3",(1, 2, 3) ,key="model_selection",disabled=st.session_state.disabled,on_change=re_run,help="The method selected increases the accuracy of the response 1 is the least responsive and 3 is the most responsive")
+           
+           
        
             
           
