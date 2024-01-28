@@ -118,7 +118,7 @@ if 'UID' not in st.session_state:
 if 'UserName' not in st.session_state:
     st.session_state.UserName = "No Name yet"
 
-if 'login' not in st.session_state:
+if 'Login' not in st.session_state:
     st.session_state.Login = False
 
 

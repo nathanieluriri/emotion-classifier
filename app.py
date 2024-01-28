@@ -2,7 +2,9 @@ import streamlit as st
 from pathlib import Path
 import requests
 import time as t 
-API_URL = ["https://api-inference.huggingface.co/models/shivanshu292001/Emotions","https://api-inference.huggingface.co/models/harshit345/xlsr-wav2vec-speech-emotion-recognition","https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"] # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
+from pages.History import History
+
+API_URL = ["https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim","https://api-inference.huggingface.co/models/shivanshu292001/Emotions","https://api-inference.huggingface.co/models/harshit345/xlsr-wav2vec-speech-emotion-recognition","https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"] # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
 headers = {"Authorization": "Bearer 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"}
 
 st.set_page_config("emotion sound Project",page_icon=":sound:")
@@ -29,7 +31,7 @@ if "prediction_option" not in st.session_state:
 
 
 
-
+@st.cache_data(show_spinner="Running model on inference API...",ttl=100)
 def query(file, counter=0):
    
     data = file
@@ -39,14 +41,14 @@ def query(file, counter=0):
     if response.status_code == 503:
         t.sleep(5)
         print("trying again...") 
-        st.write('Trying again...')
-        st.button('Click me if its response 400')
+
         counter += 1        
         if counter == 5:
             st.write("Server to busy try again in 20 mins")
             return False
         return query(file, counter)
-    elif response.status_code == 200:
+    elif response.status_code == 200:  
+            
         return response.json()
     elif response.status_code == 400:
         return ("# Invalid format given")
@@ -61,7 +63,7 @@ def Multiquery(files, counter=0, res={}, start_index=0):
         t.sleep(2.5)
         
         response = requests.post(API_URL, headers=headers, data=data)
-        st.spinner("analyzing data...")
+        
         t.sleep(2.5)
         res.update({data.name: response.json()})
         t.sleep(2.5)
@@ -117,13 +119,14 @@ def reverse_dict(input_dict):
 
 def refined_output(output):
     if type(output) == str:
-        st.warning("Response <400>")
+        st.warning(output)
         return False
     
     st.write(f"## :orange[For File ] : {st.session_state.uploaded_file.name}")
     for output_dictionary in output:
        print(output_dictionary)
        st.code(f"{output_dictionary['label']} : {output_dictionary['score'] * 100} %")
+    return output
 
 
 
@@ -160,7 +163,12 @@ def re_run():
     st.session_state.output=query(st.session_state.uploaded_file)
     refined_output(st.session_state.output)
 
-    
+@st.cache_data(show_spinner="Saving to database...")
+def update(file_name,user_id):
+     new_history = History(History_Title =st.session_state.uploaded_file.name, UserDetails=st.session_state.UID,Description = st.session_state.output)
+     new_history.save()
+     
+
 main_container = st.empty()
 with main_container:
     with st.container():
@@ -169,9 +177,16 @@ with main_container:
            st.header("Analysis")
            if st.session_state.uploaded_file != None:
             st.session_state.output = query(st.session_state.uploaded_file)
-               
-               
-            refined_output(st.session_state.output) # create logic to handle which function should be called depending on how many files were entered into the web application
+            refined_output(st.session_state.output)
+            # create logic to handle which function should be called depending on how many files were entered into the web application
+            try:
+                if st.session_state.Login:
+                    st.info("history is being saved")
+                    update(str(st.session_state.uploaded_file),str(st.session_state.UID))
+            except AttributeError:
+                st.switch_page("pages/login_page.py")
+                
+                
            analysis = st.empty()
            analysis.write("based on the audio file provided and the prediction settings the results of the analysis say there is 20% ")
             # An option to just visualize the data
