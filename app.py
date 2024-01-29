@@ -2,8 +2,15 @@ import streamlit as st
 from pathlib import Path
 import requests
 import time as t 
-from pages.History import History
 
+class History(MongoModel):
+    connect(mongodb_uri=MONGO_URI)
+    from datetime import datetime
+    UserDetails = fields.ReferenceField(User,mongo_name="User Details")
+    History_Title = fields.CharField(mongo_name="History Name")
+    Date = fields.TimestampField(mongo_name="Date",default=datetime.now)    
+    Description = fields.ListField(mongo_name="Description")
+    
 API_URL = ["https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim","https://api-inference.huggingface.co/models/shivanshu292001/Emotions","https://api-inference.huggingface.co/models/harshit345/xlsr-wav2vec-speech-emotion-recognition","https://api-inference.huggingface.co/models/audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"] # turn into a list in prediction setting you should be able to select the model you want to use to do a prediction
 headers = {"Authorization": "Bearer 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"}
 
