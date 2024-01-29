@@ -2,6 +2,7 @@ import streamlit as st
 from pathlib import Path
 import requests
 import time as t 
+from pymodm import MongoModel,connect,fields
 
 class History(MongoModel):
     connect(mongodb_uri=MONGO_URI)
