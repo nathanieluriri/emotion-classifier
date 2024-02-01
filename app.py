@@ -4,6 +4,8 @@ import requests
 import time as t 
 from pymodm import MongoModel,connect,fields
 
+from pages.History import MONGO_URI
+
 class History(MongoModel):
     connect(mongodb_uri=MONGO_URI)
     from datetime import datetime
