@@ -7,3 +7,4 @@ pymodm
 bson
 
 python-dotenv
+pymongo[srv]

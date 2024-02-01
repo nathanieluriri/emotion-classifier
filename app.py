@@ -154,7 +154,7 @@ def Multiq_refined_output(output):# function is supposed to be able to handle un
 
 
 with st.sidebar:
-    st.session_state.uploaded_file =st.file_uploader("Upload only one audio file to be analyzed",type=["wav"])
+    st.session_state.uploaded_file =st.file_uploader("Upload only one audio file to be analyzed",type=["wav","flac"])
     # st.session_state.multiple_uploaded_files = st.file_uploader("Upload multiple audio files for analysis ",type=["wav","mp3","AAC","flaac"],accept_multiple_files=True)
    
 

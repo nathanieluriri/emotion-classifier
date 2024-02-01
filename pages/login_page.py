@@ -91,6 +91,7 @@ def db_login_signup(proceed,user_name,password):
         if process == 1:
             #Sign up process starts here
             UserObject = signup(user_name,password)
+            # print(type(UserObject),UserObject)
             return UserObject
             
             
@@ -143,7 +144,7 @@ if st.session_state.submitted == False:
     with login_form:
         with st.form("my_form"):
             st.write("To login enter your details")
-            st.session_state.name = st.text_input("Enter your User Name",placeholder="Jenifer-channn")
+            st.session_state.name = st.text_input("Enter your User Name",placeholder="Enter your first name")
             st.session_state.password = st.text_input("Enter your Password",placeholder="Enter your password",type='password')
             
 
@@ -154,7 +155,8 @@ if st.session_state.submitted == False:
 
 
                 st.session_state.UID=db_login_signup(2,st.session_state.name,st.session_state.password)
-                if type(st.session_state.UID) == type("Mee") or type(st.session_state.UID) == None:
+                # print(st.session_state.UID)
+                if type(st.session_state.UID) == type("Mee") or type(st.session_state.UID) == type(None):
                     st.error(f"{st.session_state.UID} ",icon="😢") 
                     st.toast(f"{st.session_state.UID} ",icon="😢")
 

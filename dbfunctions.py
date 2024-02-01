@@ -99,9 +99,15 @@ def query_userName_from_UID(UID):
     from pymodm import connect, MongoModel, fields
     from bson import ObjectId
     from pymongo import MongoClient
-    client = MongoClient("mongodb://localhost:27017")
+    from dotenv import load_dotenv
+    
+    
+    client = MongoClient('mongodb://localhost:27017')
     filter = {'_id':UID}
-    db = client.auth_tutorial
+    db = client.Emotion_RecognitionDB
+    # print(db)
     collection = db.user
+    # print("Coollll",collection)
     query_output = collection.find_one(filter)
+    # print("QUwwee",query_output)
     return query_output

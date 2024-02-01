@@ -57,7 +57,7 @@ def query_history():
     from pymongo import MongoClient
     client = MongoClient(MONGO_URI)
     filter = {"User Details":ObjectId(st.session_state.UID)}
-    db = client.auth_tutorial
+    db = client.Emotion_RecognitionDB
     collection = db.history
     query_output = collection.find(filter)
     query_output_ls=[]
@@ -114,9 +114,11 @@ if st.session_state.Login:
         try:
             st.button("Return to point you set", on_click=refined_output(st.session_state.selected_analysis[st.session_state.return_point][0]['Description'],st.session_state.selected_analysis[st.session_state.return_point][0]['History Name']) )
         except IndexError:
-            st.write("# No History Yet!")
+            st.write(f"# No History Yet! {st.session_state.selected_analysis}")
             st.button("Check Again")
             
+        except TypeError:
+            st.write("# History Loading...")
 
         
 
