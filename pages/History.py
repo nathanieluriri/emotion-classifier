@@ -114,11 +114,12 @@ if st.session_state.Login:
         try:
             st.button("Return to point you set", on_click=refined_output(st.session_state.selected_analysis[st.session_state.return_point][0]['Description'],st.session_state.selected_analysis[st.session_state.return_point][0]['History Name']) )
         except IndexError:
-            st.write(f"# No History Yet! {st.session_state.selected_analysis}")
+            st.write(f"# :grey[No History Yet]!")
+            
             st.button("Check Again")
             
         except TypeError:
-            st.write("# History Loading...")
+            st.write("# :gray[History] Loading...")
 
         
 

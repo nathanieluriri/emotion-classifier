@@ -3,8 +3,9 @@ from pathlib import Path
 import requests
 import time as t 
 from pymodm import MongoModel,connect,fields
-
-from pages.History import MONGO_URI
+import os
+from dotenv import load_dotenv
+MONGO_URI = os.getenv('MONGO_URI')
 
 
 class User(MongoModel):
