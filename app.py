@@ -6,6 +6,11 @@ from pymodm import MongoModel,connect,fields
 
 from pages.History import MONGO_URI
 
+
+class User(MongoModel):
+    user_name = fields.CharField(mongo_name="User Name")
+    password = fields.CharField(mongo_name="Password")
+
 class History(MongoModel):
     connect(mongodb_uri=MONGO_URI)
     from datetime import datetime
